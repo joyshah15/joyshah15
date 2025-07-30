@@ -1,0 +1,301 @@
+{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block title %}Contact - {{ site_config.site_title }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center" data-aos="fade-up">
+                <h1 class="display-4 fw-bold">Get In Touch</h1>
+                <p class="lead text-muted">Let's discuss your next project</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Contact Form -->
+            <div class="col-lg-8" data-aos="fade-right">
+                <div class="contact-form bg-white p-4 rounded shadow-sm">
+                    <h3 class="mb-4">Send Me a Message</h3>
+                    
+                    <form method="POST" id="contactForm">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                {{ form.name }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.email }}
+                            </div>
+                            <div class="col-12">
+                                {{ form.subject }}
+                            </div>
+                            <div class="col-12">
+                                {{ form.message }}
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Contact Info -->
+            <div class="col-lg-4" data-aos="fade-left">
+                <div class="contact-info">
+                    <h3 class="mb-4">Contact Information</h3>
+                    
+                    {% if profile %}
+                        {% if profile.email %}
+                            <div class="contact-item mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="contact-icon bg-primary text-white rounded-circle p-3 me-3">
+                                        <i class="fas fa-envelope"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Email</h5>
+                                        <a href="mailto:{{ profile.email }}" class="text-muted">{{ profile.email }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if profile.phone %}
+                            <div class="contact-item mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="contact-icon bg-success text-white rounded-circle p-3 me-3">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Phone</h5>
+                                        <a href="tel:{{ profile.phone }}" class="text-muted">{{ profile.phone }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        {% if profile.location %}
+                            <div class="contact-item mb-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="contact-icon bg-info text-white rounded-circle p-3 me-3">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h5 class="mb-1">Location</h5>
+                                        <span class="text-muted">{{ profile.location }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    
+                    <!-- Social Links -->
+                    {% if profile and profile.github_url or profile.linkedin_url or profile.twitter_url %}
+                        <div class="social-links mt-4">
+                            <h5 class="mb-3">Follow Me</h5>
+                            <div class="d-flex gap-3">
+                                {% if profile.github_url %}
+                                    <a href="{{ profile.github_url }}" target="_blank" class="social-link github">
+                                        <i class="fab fa-github fa-2x"></i>
+                                    </a>
+                                {% endif %}
+                                {% if profile.linkedin_url %}
+                                    <a href="{{ profile.linkedin_url }}" target="_blank" class="social-link linkedin">
+                                        <i class="fab fa-linkedin fa-2x"></i>
+                                    </a>
+                                {% endif %}
+                                {% if profile.twitter_url %}
+                                    <a href="{{ profile.twitter_url }}" target="_blank" class="social-link twitter">
+                                        <i class="fab fa-twitter fa-2x"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <!-- Response Time -->
+                    <div class="response-time bg-light p-3 rounded mt-4">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clock text-primary me-3"></i>
+                            <div>
+                                <h6 class="mb-1">Response Time</h6>
+                                <small class="text-muted">Usually within 24 hours</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="faq-section bg-light py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5" data-aos="fade-up">
+                <h2 class="display-6 fw-bold">Frequently Asked Questions</h2>
+                <p class="lead text-muted">Common questions about working together</p>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion" data-aos="fade-up">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq1">
+                                What types of projects do you work on?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                I work on a variety of projects including web applications, mobile apps, 
+                                API development, and system architecture. I'm particularly experienced 
+                                with modern frameworks and cloud technologies.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq2">
+                                What's your typical project timeline?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Project timelines vary depending on complexity and scope. Small projects 
+                                typically take 2-4 weeks, while larger applications can take 2-6 months. 
+                                I'll provide a detailed timeline during our initial consultation.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq3">
+                                Do you provide ongoing support?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! I offer ongoing maintenance and support packages for all projects. 
+                                This includes bug fixes, security updates, and feature enhancements 
+                                as your needs evolve.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" 
+                                    data-bs-target="#faq4">
+                                How do you handle project communication?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                I believe in transparent communication throughout the project. I provide 
+                                regular updates, use project management tools for tracking progress, 
+                                and am always available for questions via email or scheduled calls.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .contact-icon {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .contact-form {
+        transition: transform 0.3s ease;
+    }
+    
+    .contact-form:hover {
+        transform: translateY(-5px);
+    }
+    
+    .social-link {
+        color: #6c757d;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+    
+    .social-link.github:hover {
+        color: #333;
+        transform: translateY(-3px);
+    }
+    
+    .social-link.linkedin:hover {
+        color: #0077b5;
+        transform: translateY(-3px);
+    }
+    
+    .social-link.twitter:hover {
+        color: #1da1f2;
+        transform: translateY(-3px);
+    }
+    
+    .response-time {
+        border-left: 4px solid var(--bs-primary);
+    }
+    
+    .accordion-button:not(.collapsed) {
+        background-color: var(--bs-primary);
+        color: white;
+    }
+    
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contactForm');
+    
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Sending...';
+            submitBtn.disabled = true;
+            
+            // Re-enable after form submission (whether success or error)
+            setTimeout(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+    }
+});
+</script>
+{% endblock %}
