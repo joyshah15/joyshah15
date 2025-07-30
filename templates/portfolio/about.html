@@ -1,0 +1,338 @@
+{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block title %}About - {{ site_config.site_title }}{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="page-header bg-light py-5 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center" data-aos="fade-up">
+                <h1 class="display-4 fw-bold">About Me</h1>
+                <p class="lead text-muted">Learn more about my journey and experience</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Profile Section -->
+{% if profile %}
+<section class="profile-section py-5">
+    <div class="container">
+        <div class="row g-5 align-items-center">
+            <div class="col-lg-4 text-center" data-aos="fade-right">
+                {% if profile.profile_image %}
+                    <img src="{{ profile.profile_image.url }}" alt="{{ profile.name }}" 
+                         class="img-fluid rounded-circle profile-image shadow-lg mb-4">
+                {% else %}
+                    <div class="profile-placeholder bg-primary text-white rounded-circle mx-auto mb-4 d-flex align-items-center justify-content-center">
+                        <i class="fas fa-user fa-4x"></i>
+                    </div>
+                {% endif %}
+                
+                <h2 class="fw-bold">{{ profile.name }}</h2>
+                <h4 class="text-primary mb-3">{{ profile.title }}</h4>
+                
+                {% if profile.location %}
+                    <p class="text-muted mb-3">
+                        <i class="fas fa-map-marker-alt me-2"></i>{{ profile.location }}
+                    </p>
+                {% endif %}
+                
+                <!-- Resume Download -->
+                {% if profile.resume_file %}
+                    <a href="{% url 'resume_download' %}" class="btn btn-primary btn-lg mb-4" target="_blank">
+                        <i class="fas fa-download me-2"></i>Download Resume
+                    </a>
+                {% endif %}
+            </div>
+            
+            <div class="col-lg-8" data-aos="fade-left">
+                <div class="about-content">
+                    <h3 class="mb-4">Hello! I'm {{ profile.name }}</h3>
+                    <div class="bio-text">
+                        {{ profile.bio|linebreaks }}
+                    </div>
+                    
+                    <!-- Contact Info -->
+                    <div class="contact-info-grid mt-4">
+                        <div class="row g-3">
+                            {% if profile.email %}
+                                <div class="col-md-6">
+                                    <div class="contact-item d-flex align-items-center">
+                                        <div class="contact-icon bg-primary text-white rounded-circle me-3">
+                                            <i class="fas fa-envelope"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted">Email</small>
+                                            <div><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            {% if profile.phone %}
+                                <div class="col-md-6">
+                                    <div class="contact-item d-flex align-items-center">
+                                        <div class="contact-icon bg-success text-white rounded-circle me-3">
+                                            <i class="fas fa-phone"></i>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted">Phone</small>
+                                            <div><a href="tel:{{ profile.phone }}">{{ profile.phone }}</a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Skills Section -->
+{% if skills %}
+<section class="skills-section bg-light py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-6 fw-bold">Skills & Expertise</h2>
+            <p class="lead text-muted">Technologies and tools I work with</p>
+        </div>
+        
+        <!-- Skill Categories -->
+        {% regroup skills by category as skill_groups %}
+        <div class="row g-4">
+            {% for category in skill_groups %}
+                <div class="col-lg-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|mul:100 }}">
+                    <div class="skill-category bg-white p-4 rounded shadow-sm h-100">
+                        <h4 class="mb-4 text-primary">{{ category.grouper }}</h4>
+                        <div class="skills-list">
+                            {% for skill in category.list %}
+                                <div class="skill-item mb-3">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="skill-name fw-medium">{{ skill.name }}</span>
+                                        <span class="skill-level badge bg-secondary">{{ skill.level|capfirst }}</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-primary" role="progressbar" 
+                                             style="width: {{ skill.percentage }}%" 
+                                             aria-valuenow="{{ skill.percentage }}" 
+                                             aria-valuemin="0" aria-valuemax="100">
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Experience Section -->
+{% if work_experience or education %}
+<section class="experience-section py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-6 fw-bold">Experience & Education</h2>
+            <p class="lead text-muted">My professional and educational journey</p>
+        </div>
+        
+        <div class="row g-5">
+            <!-- Work Experience -->
+            {% if work_experience %}
+                <div class="col-lg-6">
+                    <h3 class="mb-4" data-aos="fade-up">
+                        <i class="fas fa-briefcase text-primary me-2"></i>Work Experience
+                    </h3>
+                    
+                    <div class="timeline">
+                        {% for exp in work_experience %}
+                            <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|mul:100 }}">
+                                <div class="timeline-marker bg-primary"></div>
+                                <div class="timeline-content bg-white p-4 rounded shadow-sm">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="mb-0">{{ exp.title }}</h5>
+                                        {% if exp.current %}
+                                            <span class="badge bg-success">Current</span>
+                                        {% endif %}
+                                    </div>
+                                    <h6 class="text-primary mb-2">{{ exp.company }}</h6>
+                                    {% if exp.location %}
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-map-marker-alt me-1"></i>{{ exp.location }}
+                                        </p>
+                                    {% endif %}
+                                    <p class="text-muted small mb-3">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        {{ exp.start_date|date:"M Y" }} - 
+                                        {% if exp.current %}Present{% else %}{{ exp.end_date|date:"M Y" }}{% endif %}
+                                    </p>
+                                    <p class="mb-0">{{ exp.description }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <!-- Education -->
+            {% if education %}
+                <div class="col-lg-6">
+                    <h3 class="mb-4" data-aos="fade-up">
+                        <i class="fas fa-graduation-cap text-primary me-2"></i>Education
+                    </h3>
+                    
+                    <div class="timeline">
+                        {% for edu in education %}
+                            <div class="timeline-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|mul:100 }}">
+                                <div class="timeline-marker bg-success"></div>
+                                <div class="timeline-content bg-white p-4 rounded shadow-sm">
+                                    <h5 class="mb-2">{{ edu.title }}</h5>
+                                    <h6 class="text-success mb-2">{{ edu.company }}</h6>
+                                    {% if edu.location %}
+                                        <p class="text-muted small mb-2">
+                                            <i class="fas fa-map-marker-alt me-1"></i>{{ edu.location }}
+                                        </p>
+                                    {% endif %}
+                                    <p class="text-muted small mb-3">
+                                        <i class="fas fa-calendar me-1"></i>
+                                        {{ edu.start_date|date:"M Y" }} - 
+                                        {% if edu.current %}Present{% else %}{{ edu.end_date|date:"M Y" }}{% endif %}
+                                    </p>
+                                    <p class="mb-0">{{ edu.description }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Call to Action -->
+<section class="cta-section bg-primary text-white py-5">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="display-6 fw-bold mb-3">Let's Work Together</h2>
+        <p class="lead mb-4">Ready to start your next project? Let's discuss how I can help bring your ideas to life.</p>
+        <div class="cta-buttons">
+            <a href="{% url 'contact' %}" class="btn btn-light btn-lg me-3">
+                <i class="fas fa-envelope me-2"></i>Get In Touch
+            </a>
+            <a href="{% url 'portfolio' %}" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-briefcase me-2"></i>View My Work
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .profile-image {
+        width: 250px;
+        height: 250px;
+        object-fit: cover;
+    }
+    
+    .profile-placeholder {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .contact-icon {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .skill-category {
+        transition: transform 0.3s ease;
+    }
+    
+    .skill-category:hover {
+        transform: translateY(-5px);
+    }
+    
+    .timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 1rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, #667eea, #764ba2);
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 2rem;
+    }
+    
+    .timeline-marker {
+        position: absolute;
+        left: -2.5rem;
+        top: 1rem;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 0 0 3px #667eea;
+    }
+    
+    .timeline-content {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .timeline-content:hover {
+        transform: translateX(5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15) !important;
+    }
+    
+    .bio-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+    
+    @media (max-width: 768px) {
+        .profile-image,
+        .profile-placeholder {
+            width: 200px;
+            height: 200px;
+        }
+        
+        .timeline {
+            padding-left: 1.5rem;
+        }
+        
+        .timeline-marker {
+            left: -2rem;
+        }
+        
+        .cta-buttons .btn {
+            display: block;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-buttons .btn:last-child {
+            margin-bottom: 0;
+        }
+    }
+</style>
+{% endblock %}

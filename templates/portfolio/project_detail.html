@@ -1,0 +1,395 @@
+{% extends 'portfolio/base.html' %}
+{% load static %}
+
+{% block title %}{{ project.title }} - {{ site_config.site_title }}{% endblock %}
+
+{% block content %}
+<!-- Project Header -->
+<section class="project-header bg-light py-5 mt-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8" data-aos="fade-right">
+                <nav aria-label="breadcrumb" class="mb-3">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{% url 'portfolio' %}">Portfolio</a></li>
+                        <li class="breadcrumb-item active">{{ project.title }}</li>
+                    </ol>
+                </nav>
+                
+                <h1 class="display-4 fw-bold mb-3">{{ project.title }}</h1>
+                <p class="lead text-muted mb-4">{{ project.short_description }}</p>
+                
+                <div class="project-meta d-flex flex-wrap gap-3 mb-4">
+                    <span class="badge bg-{{ project.status|yesno:'success,warning,secondary' }} fs-6">
+                        {% if project.status == 'completed' %}
+                            <i class="fas fa-check me-1"></i>Completed
+                        {% elif project.status == 'in_progress' %}
+                            <i class="fas fa-spinner me-1"></i>In Progress
+                        {% else %}
+                            <i class="fas fa-clock me-1"></i>Planned
+                        {% endif %}
+                    </span>
+                    
+                    {% if project.featured %}
+                        <span class="badge bg-warning fs-6">
+                            <i class="fas fa-star me-1"></i>Featured
+                        </span>
+                    {% endif %}
+                    
+                    <span class="text-muted">
+                        <i class="fas fa-calendar me-1"></i>
+                        {{ project.start_date|date:"M Y" }}
+                        {% if project.end_date %} - {{ project.end_date|date:"M Y" }}{% endif %}
+                    </span>
+                </div>
+                
+                <div class="project-actions">
+                    {% if project.live_url %}
+                        <a href="{{ project.live_url }}" target="_blank" class="btn btn-primary btn-lg me-3">
+                            <i class="fas fa-external-link-alt me-2"></i>View Live Demo
+                        </a>
+                    {% endif %}
+                    {% if project.github_url %}
+                        <a href="{{ project.github_url }}" target="_blank" class="btn btn-outline-dark btn-lg">
+                            <i class="fab fa-github me-2"></i>View Code
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="col-lg-4 text-center" data-aos="fade-left">
+                {% if project.image %}
+                    <img src="{{ project.image.url }}" alt="{{ project.title }}" 
+                         class="img-fluid rounded shadow-lg project-hero-image">
+                {% else %}
+                    <div class="project-placeholder bg-light rounded d-flex align-items-center justify-content-center">
+                        <i class="fas fa-image text-muted fa-4x"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Project Details -->
+<section class="project-details py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Project Description -->
+            <div class="col-lg-8" data-aos="fade-up">
+                <div class="project-content">
+                    <h2 class="mb-4">Project Overview</h2>
+                    <div class="project-description">
+                        {{ project.description|linebreaks }}
+                    </div>
+                    
+                    <!-- Additional sections can be added here -->
+                    <div class="mt-5">
+                        <h3 class="mb-3">Key Features</h3>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-start">
+                                    <div class="feature-icon bg-primary text-white rounded-circle me-3 p-2">
+                                        <i class="fas fa-check"></i>
+                                    </div>
+                                    <div>
+                                        <h6>Responsive Design</h6>
+                                        <small class="text-muted">Works seamlessly across all devices</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-start">
+                                    <div class="feature-icon bg-success text-white rounded-circle me-3 p-2">
+                                        <i class="fas fa-bolt"></i>
+                                    </div>
+                                    <div>
+                                        <h6>High Performance</h6>
+                                        <small class="text-muted">Optimized for speed and efficiency</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-start">
+                                    <div class="feature-icon bg-info text-white rounded-circle me-3 p-2">
+                                        <i class="fas fa-shield-alt"></i>
+                                    </div>
+                                    <div>
+                                        <h6>Security Focused</h6>
+                                        <small class="text-muted">Built with security best practices</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="feature-item d-flex align-items-start">
+                                    <div class="feature-icon bg-warning text-white rounded-circle me-3 p-2">
+                                        <i class="fas fa-cogs"></i>
+                                    </div>
+                                    <div>
+                                        <h6>Easy Maintenance</h6>
+                                        <small class="text-muted">Clean, maintainable codebase</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Project Sidebar -->
+            <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="project-sidebar">
+                    <!-- Technologies Used -->
+                    <div class="sidebar-section bg-light p-4 rounded mb-4">
+                        <h4 class="mb-3">
+                            <i class="fas fa-code text-primary me-2"></i>Technologies Used
+                        </h4>
+                        <div class="technologies-grid">
+                            {% for tech in project.get_technologies_list %}
+                                <span class="badge bg-secondary me-2 mb-2 fs-6">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Project Info -->
+                    <div class="sidebar-section bg-white p-4 rounded shadow-sm mb-4">
+                        <h4 class="mb-3">
+                            <i class="fas fa-info-circle text-primary me-2"></i>Project Information
+                        </h4>
+                        
+                        <div class="info-item mb-3">
+                            <strong class="d-block text-muted small">Status</strong>
+                            <span class="badge bg-{{ project.status|yesno:'success,warning,secondary' }}">
+                                {{ project.get_status_display }}
+                            </span>
+                        </div>
+                        
+                        <div class="info-item mb-3">
+                            <strong class="d-block text-muted small">Duration</strong>
+                            <span>
+                                {{ project.start_date|date:"M Y" }}
+                                {% if project.end_date %} - {{ project.end_date|date:"M Y" }}{% endif %}
+                            </span>
+                        </div>
+                        
+                        {% if project.github_url %}
+                            <div class="info-item mb-3">
+                                <strong class="d-block text-muted small">Repository</strong>
+                                <a href="{{ project.github_url }}" target="_blank" class="text-decoration-none">
+                                    <i class="fab fa-github me-1"></i>View on GitHub
+                                </a>
+                            </div>
+                        {% endif %}
+                        
+                        {% if project.live_url %}
+                            <div class="info-item mb-3">
+                                <strong class="d-block text-muted small">Live Demo</strong>
+                                <a href="{{ project.live_url }}" target="_blank" class="text-decoration-none">
+                                    <i class="fas fa-external-link-alt me-1"></i>Visit Website
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Share Project -->
+                    <div class="sidebar-section bg-light p-4 rounded">
+                        <h4 class="mb-3">
+                            <i class="fas fa-share-alt text-primary me-2"></i>Share This Project
+                        </h4>
+                        <div class="share-buttons d-flex gap-2">
+                            <a href="https://twitter.com/intent/tweet?text={{ project.title }}&url={{ request.build_absolute_uri }}" 
+                               target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.build_absolute_uri }}" 
+                               target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <button class="btn btn-outline-primary btn-sm" onclick="copyToClipboard('{{ request.build_absolute_uri }}')">
+                                <i class="fas fa-link"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Projects -->
+{% if related_projects %}
+<section class="related-projects bg-light py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="display-6 fw-bold">Related Projects</h2>
+            <p class="lead text-muted">Other projects you might find interesting</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for related_project in related_projects %}
+                <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1|mul:100 }}">
+                    <div class="card project-card h-100 shadow-sm">
+                        {% if related_project.image %}
+                            <img src="{{ related_project.image.url }}" class="card-img-top" alt="{{ related_project.title }}">
+                        {% else %}
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                                <i class="fas fa-image text-muted fa-2x"></i>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <h5 class="card-title">{{ related_project.title }}</h5>
+                            <p class="card-text">{{ related_project.short_description }}</p>
+                            
+                            <div class="mb-3">
+                                {% for tech in related_project.get_technologies_list|slice:":3" %}
+                                    <span class="badge bg-secondary me-1 mb-1">{{ tech }}</span>
+                                {% endfor %}
+                                {% if related_project.get_technologies_list|length > 3 %}
+                                    <span class="badge bg-light text-dark">+{{ related_project.get_technologies_list|length|add:"-3" }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-transparent">
+                            <a href="{% url 'project_detail' related_project.id %}" class="btn btn-primary btn-sm">
+                                <i class="fas fa-eye me-1"></i>View Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4" data-aos="fade-up">
+            <a href="{% url 'portfolio' %}" class="btn btn-outline-primary btn-lg">
+                <i class="fas fa-arrow-left me-2"></i>Back to Portfolio
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Contact CTA -->
+<section class="contact-cta bg-primary text-white py-5">
+    <div class="container text-center" data-aos="fade-up">
+        <h2 class="display-6 fw-bold mb-3">Interested in Similar Work?</h2>
+        <p class="lead mb-4">Let's discuss how I can help bring your project ideas to life.</p>
+        <a href="{% url 'contact' %}" class="btn btn-light btn-lg">
+            <i class="fas fa-envelope me-2"></i>Start a Conversation
+        </a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .project-hero-image {
+        max-height: 400px;
+        object-fit: cover;
+    }
+    
+    .project-placeholder {
+        height: 300px;
+        min-height: 300px;
+    }
+    
+    .feature-icon {
+        width: 35px;
+        height: 35px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    
+    .project-description {
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+    
+    .sidebar-section {
+        transition: transform 0.3s ease;
+    }
+    
+    .sidebar-section:hover {
+        transform: translateY(-3px);
+    }
+    
+    .technologies-grid .badge {
+        font-size: 0.9rem;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .info-item {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 0.75rem;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 0 !important;
+    }
+    
+    .share-buttons .btn {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .project-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .project-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15) !important;
+    }
+    
+    @media (max-width: 768px) {
+        .project-actions .btn {
+            display: block;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .project-actions .btn:last-child {
+            margin-bottom: 0;
+        }
+        
+        .project-hero-image {
+            margin-top: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        // Show success message
+        if (window.portfolioJS && window.portfolioJS.showAlert) {
+            window.portfolioJS.showAlert('success', 'Link copied to clipboard!');
+        } else {
+            alert('Link copied to clipboard!');
+        }
+    }, function(err) {
+        console.error('Could not copy text: ', err);
+        if (window.portfolioJS && window.portfolioJS.showAlert) {
+            window.portfolioJS.showAlert('error', 'Failed to copy link');
+        }
+    });
+}
+
+// Track project view analytics
+if (window.portfolioJS && window.portfolioJS.trackEvent) {
+    window.portfolioJS.trackEvent('view', 'project', '{{ project.title }}');
+}
+</script>
+{% endblock %}
